@@ -11,8 +11,8 @@ High-quality image segmentation is fundamental to pixel-level geospatial analysi
 ```python
 pip install requirements.txt
 ```
-* Download checkpoints of segmentation models, SAM and SegAssess to ./checkpoints. They can be downloaded from
-**Google drive**:https://drive.google.com/drive/folders/1E3jNSO8CGl_72V1rq38a-aagGEFL7S6c?usp=drive_link<br>
+* Download checkpoints of segmentation models, SAM and SegAssess to ./checkpoints. They can be downloaded from:<br>
+**Google drive**:https://drive.google.com/drive/folders/18wrI3DaNrHM0p-VvhPKqQo_wGtQsQw_S?usp=sharing <br>
 **Baidu drive**:https://pan.baidu.com/s/1EddQLzkyWCoqZVFIxIuuAQ](https://pan.baidu.com/s/1BYA2T8xmrt-ZCRLFLpp_pw (password:c8m2) <br>
 
 2、Select model to predict unchecked segmentation maps
