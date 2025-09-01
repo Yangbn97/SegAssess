@@ -1,0 +1,114 @@
+import argparse
+import datetime
+import shutil
+import os
+os.environ['NCCL_P2P_LEVEL'] = 'NVL'
+os.environ['NO_ALBUMENTATIONS_UPDATE'] = 'true'
+import time
+import sys
+from functools import partial
+import torch
+import torch.nn as nn
+import torch.nn.parallel
+import torch.cuda.amp as amp
+import torch.nn.functional as F
+import warnings
+from Data.DataLoader import Dataset_Loader
+from tools.setting_utils import *
+from models.buildmodel import build_seg_model,  build_assess_model
+from solvers.SegAssess_trainer import run_train, run_val, run_eval
+warnings.filterwarnings("ignore")
+
+def get_parser():
+    parser = argparse.ArgumentParser(
+        description='Pytorch Referring Expression Segmentation')
+    parser.add_argument(
+        '-c', '--configs',
+        type=str,
+        default=r'./configs/config_Inria.json',
+        # default=r'./configs/config_CrowdAI.json',
+        # default=r'./configs/config_DeepGlobe.json',
+        # default=r'./configs/config_Massachusetts.json',
+        # default=r'./configs/config_GID.json',  
+        # default=r'./configs/config_BAQS.json',
+        # default=r'./configs/config_WAQS.json',
+        help='Name of the configs file, including the .json file extension.')
+    
+    parser.add_argument(
+        '-eval_seg_model',
+        type=str,
+        default='deeplabv3+',
+        help='All datasets support "deeplabv3+", "hrnet", "transunet", "unetformer", "ocrnet" . BAQS and WAQS additional support "raw"')
+    
+    parser.add_argument(
+        '-eval',
+        type=int,
+        default=True,
+        help='Whether to save inference results during evaluation')
+    
+    parser.add_argument(
+        '-eval_save_out',
+        type=int,
+        default=False,
+        help='Whether to save inference results during evaluation')
+    
+    args = parser.parse_args()
+    assert args.configs is not None
+    cfg = load_config(args.configs)
+    args = set_ddp(args, cfg, key='DDP')
+    args.configs = cfg
+    args.image_size = args.configs['Data']['image_size']
+    args.configs['Paths']['records_filename'] = f'{args.configs['Data']['dataset_name']}_AMS2{args.eval_seg_model}'
+    args.configs['DDP']['flag'] = 0
+    if 'eval' in args.configs['Experiment']['tasks']:
+        args.eval = True
+    args.class_num = 1
+
+    return args
+
+def main():
+    args = get_parser()
+    setup_seed(20)
+
+    args.logger_root, args.vis_root, args.weight_root, args.record_root = build_roots(args.configs)
+    args.logger = LogSummary(args.logger_root)
+
+    make_print_to_file(args)
+
+    args.augmentator = MultiTensorAugmentator()
+
+    args = build_seg_model(args)
+
+    args = build_assess_model(args)
+
+    args.early_stopping = EarlyStopping(5, verbose=True, path=args.weight_root)
+    
+    args.train_loader, args.val_loader = Dataset_Loader(args, args.configs)
+
+    scaler = torch.cuda.amp.GradScaler()
+    print(args.configs)
+
+    best_loss = {'total_loss': 1000, 'IoU': 0,'early_stop': False}
+    train_step = 0
+    val_step = 0
+    if args.eval:
+        run_eval(args, vis=True, save_outs=args.eval_save_out)
+        return
+    for epoch in range(1, args.configs['Experiment']['epoch_num']):
+        start_time = datetime.datetime.now()
+        print('Training Epoch:{}'.format(epoch))
+        train_step = run_train(epoch, train_step, args,scaler)
+        if epoch:
+            print('Validating...')
+            val_step, best_loss = run_val(epoch, val_step, best_loss, args)
+        end_time = datetime.datetime.now()
+        print("Time Elapsed for epoch => {1}".format(epoch, end_time - start_time))
+        if best_loss['early_stop']:
+            print('Early Stop !')
+            return
+    
+
+
+if __name__ == '__main__':
+    # os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
+    main()

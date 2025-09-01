@@ -1,0 +1,68 @@
+{
+  "Experiment":{
+    "tasks": ["train-val"],
+    "test": 0,
+    "evaluate": 0,
+    "epoch_num": 150,
+    "batch_size": 64,
+    "num_workers": 8
+  },
+  "Paths": {
+    "TrainRoot": "/root/autodl-tmp/Datasets/CrowdAI/train",
+    "ValRoot": "/root/autodl-tmp/Datasets/CrowdAI/valid",
+    "TestRoot": "/root/autodl-tmp/Datasets/CrowdAI/valid/image",
+    "eval_save_dir":"/root/autodl-tmp/Datasets/exps/CrowdAI",
+    "RecordRoot": "./records",
+    "records_filename": "CrowdAI",
+    "pretrained_assess_path": "./checkpoints/SegAssess/CrowdAI/best.pkl",
+    "pretrained_SAM_weight_path":"./checkpoints/SAM/sam_vit_b_01ec64.pth",
+    "pretrained_seg_path": {"deeplabv3+": "./checkpoints/Segmentation/CrowdAI_deeplabv3+.pkl",
+                            "hrnet":"./checkpoints/Segmentation/CrowdAI_hrnet.pkl",
+                            "transunet":"./checkpoints/Segmentation/CrowdAI_transunet.pkl",
+                            "unetformer":"./checkpoints/Segmentation/CrowdAI_unetformer.pkl",
+                            "OCRNet": "./checkpoints/Segmentation/CrowdAI_ocrnet.pkl"}
+  },
+  "Data": {
+    "object_type": "building",
+    "dataset_name": "CrowdAI",
+    "image_size": 300,
+    "class_num": 1,
+    "class_shape": ["poly"]
+  },
+   "Model": {
+    "seg_model": {
+      "name": ["deeplabv3+", "hrnet", "transunet", "unetformer", "ocrnet"],
+      "resume": 1,
+      "save": 1,
+      "lr": 1e-4,
+      "optimizer": "Adam",
+      "weight_decay": 0,
+      "scheduler": 0
+    },
+    "assess_model": {
+      "name": "sam",
+      "DiT_pretrain": 0,
+      "ViT_pretrain": 0,
+      "resume": 1,
+      "save": 1,
+      "lr": 1e-4,
+      "optimizer": "Adam",
+      "weight_decay": 0,
+      "scheduler": 0,
+      "dilate_pixels": 5,
+      "show_outputs":0
+    },
+    "threshold": 0.5
+  },
+  "DDP":{
+    "flag":1,
+    "dist_url":"tcp://localhost:3681",
+    "dist_backend":"nccl",
+    "multiprocessing_distributed":1,
+    "world_size":1,
+    "rank":0,
+    "sync_bn":1
+
+  }
+}
+
