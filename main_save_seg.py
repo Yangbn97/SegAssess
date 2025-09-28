@@ -42,9 +42,8 @@ def get_parser():
     
     parser.add_argument(
         '-model_names',
-        nargs='+', 
         type=str,         
-        default=["deeplabv3+", "hrnet", "transunet", "unetformer", "ocrnet"],
+        default="deeplabv3+",
         help='Name of segmentation model.All datasets support "deeplabv3+", "hrnet", "transunet", "unetformer", "ocrnet"')
     
     args = parser.parse_args()
