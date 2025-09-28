@@ -17,7 +17,7 @@ def worker_init_fn(worker_id, num_workers, rank, seed):
     np.random.seed(worker_seed)
     random.seed(worker_seed)
 
-def Dataset_Loader(args, configs):
+def Dataset_Loader(args, configs, is_seg=False):
     train_ROOT = configs['Paths']['TrainRoot']
     val_ROOT = configs['Paths']['ValRoot']
     train_loader = []
@@ -33,7 +33,10 @@ def Dataset_Loader(args, configs):
             shuffle=True,
             num_workers=configs['Experiment']['num_workers'], pin_memory=True, drop_last=drop_last_flag)
 
-    valset = Dataset_AMS(val_ROOT, seg_model=args.eval_seg_model)
+    if is_seg:
+        valset = Dataset_base(train_ROOT, mode='valid')
+    else:
+        valset = Dataset_AMS(val_ROOT, seg_model=args.eval_seg_model)
     val_loader = torch.utils.data.DataLoader(
         valset,
         batch_size=configs['Experiment']['batch_size'],
