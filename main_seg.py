@@ -53,7 +53,7 @@ args = parser.parse_args()
 assert args.configs_path is not None, "Argument --configs must be specified. Run 'python main.py --help' for help on arguments."
 configs = load_config(args.configs_path)
 args.configs = configs
-
+args.eval_seg_model = args.model_name
 args.work_dir, args.vis_root, args.model_dir, args.record_root = build_roots(configs)
 
 args.logger = LogSummary(args.work_dir)
