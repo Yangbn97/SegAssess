@@ -62,7 +62,7 @@ make_print_to_file(args)
 args.early_stopping = EarlyStopping(5, verbose=True, path=args.model_dir)
 
 
-args.train_loader, args.val_loader = Dataset_Loader(args, configs)
+args.train_loader, args.val_loader = Dataset_Loader(args, configs, is_seg=True)
 
 args.class_num = 1
 
