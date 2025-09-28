@@ -52,7 +52,7 @@ def get_parser():
     cfg = load_config(args.configs)
     args.configs = cfg
     args.image_size = args.configs['Data']['image_size']
-
+    args.eval_seg_model = args.model_name
     args.class_num = 1
 
     return args
