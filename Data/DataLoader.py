@@ -34,7 +34,7 @@ def Dataset_Loader(args, configs, is_seg=False):
             num_workers=configs['Experiment']['num_workers'], pin_memory=True, drop_last=drop_last_flag)
 
     if is_seg:
-        valset = Dataset_base(train_ROOT, mode='valid')
+        valset = Dataset_base(val_ROOT, mode='valid')
     else:
         valset = Dataset_AMS(val_ROOT, seg_model=args.eval_seg_model)
     val_loader = torch.utils.data.DataLoader(
