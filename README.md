@@ -42,19 +42,19 @@ python main_SegAssess_ddp.py -eval=0 -eval_seg_model='ocrnet # eval_seg_model: A
 ```
 or run in DP mode:
  ```python
-python main.py -eval=0 -eval_seg_model='ocrnet 
+python main.py -eval=0 -eval_seg_model='ocrnet' 
 ```
 * For evaluate, run in DDP mode:
  ```python
-python main_SegAssess_ddp.py -eval=1 -eval_seg_model='ocrnet 
+python main_SegAssess_ddp.py -eval=1 -eval_seg_model='ocrnet' 
 ```
 or run in DP mode:
  ```python
-python main.py -eval=1 -eval_seg_model='ocrnet
+python main.py -eval=1 -eval_seg_model='ocrnet'
 ```
 If you'd like to save inference results, run:
 ```python
-python main_SegAssess_ddp.py -eval=1 -eval_save_out=1 -eval_seg_model='ocrnet 
+python main_SegAssess_ddp.py -eval=1 -eval_save_out=1 -eval_seg_model='ocrnet' 
 ```
 
 3、Datasets dictionary
