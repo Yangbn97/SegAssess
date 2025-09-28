@@ -42,8 +42,9 @@ def get_parser():
     
     parser.add_argument(
         '-model_names',
+        nargs='+', 
         type=str,         
-        default="deeplabv3+",
+        default=["deeplabv3+", "hrnet", "transunet", "unetformer", "ocrnet"],
         help='Name of segmentation model.All datasets support "deeplabv3+", "hrnet", "transunet", "unetformer", "ocrnet"')
     
     args = parser.parse_args()
@@ -51,7 +52,7 @@ def get_parser():
     cfg = load_config(args.configs)
     args.configs = cfg
     args.image_size = args.configs['Data']['image_size']
-    args.eval_seg_model = args.model_name
+    args.eval_seg_model = args.model_names
     args.class_num = 1
 
     return args
@@ -67,7 +68,7 @@ def main():
     args.workers = args.configs['Experiment']['num_workers']
     args.configs['Experiment']['batch_size'] = 1
     
-    args.train_loader, args.val_loader = Dataset_Loader(args, args.configs)
+    args.train_loader, args.val_loader = Dataset_Loader(args, args.configs, is_seg=True)
 
     dataset_name = args.configs['Data']['dataset_name']
     print(f'--------------Processing {dataset_name}-----------------')
