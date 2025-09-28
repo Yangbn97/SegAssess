@@ -21,7 +21,7 @@ pip install requirements.txt
 * Set the config file in ./configs
 * If you plan to train a new segmentation model weight, specify config file in the main_seg.py and run:
  ```python
-python main_seg.py -model_names=['deeplabv3+'] # -model_names default=["deeplabv3+", "hrnet", "transunet", "unetformer", "ocrnet"]
+python main_seg.py -model_names='deeplabv3+' 
 ```
 *  If you have downloaded weights from cloud and want to directly generate binary segmentation results for assessment: specify config file in the main_save_seg.py. The predicted segmentation maps are saved in 'ValRoot/seg_preds'
 ```python
@@ -29,7 +29,7 @@ seg_save_dir = os.path.join(configs['Paths']['ValRoot'], 'seg_preds')
 ```
 *  run:
  ```python
-python main_save_seg.py -model_names=['ocrnet'] # -model_names default=["deeplabv3+", "hrnet", "transunet", "unetformer", "ocrnet"]
+python main_save_seg.py -model_names='ocrnet'
 ```
 
 3、SegAssess training and evaluation
