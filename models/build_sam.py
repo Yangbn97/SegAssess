@@ -40,7 +40,7 @@ def build_sam_vit_l(args, checkpoint=None):
     )
 
 
-def build_sam_vit_b(args, checkpoint='/root/autodl-tmp/Projects/checkpoints/sam_vit_b_01ec64.pth'):
+def build_sam_vit_b(args, checkpoint='./checkpoints/SAM/sam_vit_b_01ec64.pth'):
     return _build_sam(
         args,
         encoder_embed_dim=768,
