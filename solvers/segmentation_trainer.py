@@ -451,7 +451,7 @@ def save_train_seg(args, save_mode='coco'):
                 #     cv2.imwrite(gt_save_path, mask_true*255)
                 mask_save_dir = os.path.join(label_save_dir, 'seg_preds')
                 mask_save_dir = os.path.join(mask_save_dir, m_name)
-                os.system('mkdir -p {}'.format(mask_save_dir))
+                os.makedirs(mask save dir, exist ok=True)
                 mask_save_path = os.path.join(mask_save_dir, "{}.tif".format(name))
                 cv2.imwrite(mask_save_path, mask_pred*255)     
                 
