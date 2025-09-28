@@ -29,7 +29,7 @@ seg_save_dir = os.path.join(configs['Paths']['ValRoot'], 'seg_preds')
 ```
 *  run:
  ```python
-python main_save_seg.py -model_names='ocrnet'
+python main_save_seg.py -model_names=['ocrnet']
 ```
 
 3、SegAssess training and evaluation
